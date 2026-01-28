@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Meme Generator 🎭</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>🎭 Face Meme Generator</h1>
+            <p class="subtitle">Upload a photo and let AI create a meme based on your expression!</p>
+        </header>
+
+        <div class="upload-section">
+            <div class="upload-box" id="uploadBox">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <div class="upload-content">
+                    <div class="upload-icon">📸</div>
+                    <h2>Choose an Image</h2>
+                    <p>Click to upload or drag and drop</p>
+                    <p class="file-types">PNG, JPG, JPEG, GIF (Max 16MB)</p>
+                    <button class="btn-primary" id="uploadBtn">Select Image</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Analyzing your face and generating meme...</p>
+            <p class="loading-subtext">This may take a few seconds</p>
+        </div>
+
+        <div class="error" id="error">
+            <div class="error-icon">⚠️</div>
+            <p id="errorMessage"></p>
+            <button class="btn-secondary" onclick="resetUpload()">Try Again</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Analysis Results</h2>
+
+            <div class="emotion-info">
+                <div class="emotion-badge">
+                    <span class="emotion-label">Detected Emotion:</span>
+                    <span class="emotion-value" id="emotionValue"></span>
+                </div>
+                <p class="emotion-description" id="emotionDescription"></p>
+                <div class="confidence">
+                    Confidence: <span id="confidenceValue"></span>%
+                </div>
+            </div>
+
+            <div class="emotion-scores" id="emotionScores">
+                <h3>All Emotion Scores</h3>
+                <div class="scores-grid" id="scoresGrid"></div>
+            </div>
+
+            <div class="images-container">
+                <div class="image-card">
+                    <h3>Original Image</h3>
+                    <img id="originalImage" alt="Original">
+                    <p class="image-info">Faces detected: <span id="faceCount"></span></p>
+                </div>
+
+                <div class="image-card highlight">
+                    <h3>🎉 Your Meme!</h3>
+                    <img id="memeImage" alt="Generated Meme">
+                    <button class="btn-primary" onclick="downloadMeme()">Download Meme</button>
+                </div>
+            </div>
+
+            <button class="btn-secondary" onclick="resetUpload()">Generate Another Meme</button>
+        </div>
+
+        <footer>
+            <p>Powered by OpenCV & Flask</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>
