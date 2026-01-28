@@ -110,5 +110,10 @@ def send_static(path):
 if __name__ == '__main__':
     print("🎭 Face Meme Generator is starting...")
     print("📊 Loading ML models (this may take a moment)...")
-    print("🚀 Server will be available at http://localhost:5001")
-    app.run(debug=True, host='0.0.0.0', port=5001)
+    
+    # Use environment PORT variable for deployment platforms
+    port = int(os.environ.get('PORT', 5001))
+    debug = os.environ.get('FLASK_ENV', 'development') == 'development'
+    
+    print(f"🚀 Server will be available at http://localhost:{port}")
+    app.run(debug=debug, host='0.0.0.0', port=port)
