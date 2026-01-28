@@ -23,7 +23,22 @@
                     <h2>Choose an Image</h2>
                     <p>Click to upload or drag and drop</p>
                     <p class="file-types">PNG, JPG, JPEG, GIF (Max 16MB)</p>
-                    <button class="btn-primary" id="uploadBtn">Select Image</button>
+                    <div class="button-group">
+                        <button class="btn-primary" id="uploadBtn">Select Image</button>
+                        <button class="btn-secondary" id="cameraBtn">📷 Use Camera</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="camera-section" id="cameraSection">
+            <div class="camera-container">
+                <h2>📸 Take a Photo</h2>
+                <video id="cameraVideo" autoplay playsinline></video>
+                <canvas id="cameraCanvas" hidden></canvas>
+                <div class="camera-controls">
+                    <button class="btn-primary" id="captureBtn">Capture Photo</button>
+                    <button class="btn-secondary" id="closeCameraBtn">Cancel</button>
                 </div>
             </div>
         </div>
