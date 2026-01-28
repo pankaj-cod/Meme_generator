@@ -45,10 +45,71 @@ uploadBox.addEventListener('drop', (e) => {
 });
 
 uploadBox.addEventListener('click', (e) => {
-    if (e.target !== uploadBtn) {
+    if (e.target !== uploadBtn && e.target !== cameraBtn) {
         fileInput.click();
     }
 });
+
+// Camera Functions
+async function openCamera() {
+    try {
+        // Request camera access
+        cameraStream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: 'user',
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
+            }
+        });
+
+        // Show camera section, hide upload
+        uploadBox.parentElement.style.display = 'none';
+        cameraSection.style.display = 'block';
+
+        // Set video stream
+        cameraVideo.srcObject = cameraStream;
+
+    } catch (err) {
+        console.error('Camera error:', err);
+        showError('Could not access camera. Please ensure camera permissions are granted.');
+    }
+}
+
+function capturePhoto() {
+    // Set canvas size to match video
+    cameraCanvas.width = cameraVideo.videoWidth;
+    cameraCanvas.height = cameraVideo.videoHeight;
+
+    // Draw current video frame to canvas
+    const ctx = cameraCanvas.getContext('2d');
+    ctx.drawImage(cameraVideo, 0, 0);
+
+    // Convert canvas to blob
+    cameraCanvas.toBlob((blob) => {
+        if (blob) {
+            // Create a file from the blob
+            const file = new File([blob], 'camera-capture.jpg', { type: 'image/jpeg' });
+
+            // Close camera
+            closeCamera();
+
+            // Upload the captured image
+            uploadImage(file);
+        }
+    }, 'image/jpeg', 0.95);
+}
+
+function closeCamera() {
+    // Stop camera stream
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+    }
+
+    // Hide camera section, show upload
+    cameraSection.style.display = 'none';
+    uploadBox.parentElement.style.display = 'block';
+}
 
 function handleFileSelect() {
     const file = fileInput.files[0];
@@ -74,6 +135,7 @@ function handleFileSelect() {
 async function uploadImage(file) {
     // Hide all sections
     uploadBox.parentElement.style.display = 'none';
+    cameraSection.style.display = 'none';
     error.style.display = 'none';
     results.style.display = 'none';
     loading.style.display = 'block';
@@ -140,6 +202,7 @@ function displayResults(data) {
 function showError(message) {
     loading.style.display = 'none';
     uploadBox.parentElement.style.display = 'none';
+    cameraSection.style.display = 'none';
     results.style.display = 'none';
     error.style.display = 'block';
     errorMessage.textContent = message;
@@ -149,6 +212,7 @@ function showError(message) {
 
 function resetUpload() {
     fileInput.value = '';
+    closeCamera(); // Close camera if open
     uploadBox.parentElement.style.display = 'block';
     loading.style.display = 'none';
     error.style.display = 'none';
